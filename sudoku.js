@@ -1,24 +1,31 @@
-"use strict"
-
 class Sudoku {
-  constructor(board_string) {}
+    
+    constructor() {
+        this.arr = []
+        this.tes = ""
+    }
+    
+    createBoard(input) {
+        var num =  "105802000090076405200400819019007306762083090000061050007600030430020501600308900";
+        // var arr = []
+        var k = 0
+        for(var i = 0; i < input; i++){
+            var arrRow = [];
+            for(var j = 0; j < input; j++){
+                arrRow.push(num[k])
+                k++
+            }
+            this.arr.push(arrRow)
+        }
+        console.log( this.arr)
+    }
 
-  solve() {}
-
-  // Returns a string representing the current state of the board
-  board() {}
+    checker() {
+        console.log(this.arr)
+        var isiArr = this.createBoard()
+        console.log(isiArr)
+    }
 }
 
-// The file has newlines at the end of each line,
-// so we call split to remove it (\n)
-var fs = require('fs')
-var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
-  .toString()
-  .split("\n")[0]
-
-var game = new Sudoku(board_string)
-
-// Remember: this will just fill out what it can and not "guess"
-game.solve()
-
-console.log(game.board())
+var sudoku = new Sudoku()
+sudoku.createBoard(9)
