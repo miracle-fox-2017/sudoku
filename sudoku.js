@@ -24,7 +24,6 @@ class Sudoku {
 
   // Returns a string representing the current state of the board
   board() {
-    // console.log(number);
     for (var row = 0; row < 9; row++) {
       let rows =[]
       for (var col = 0; col < 9; col++) {
