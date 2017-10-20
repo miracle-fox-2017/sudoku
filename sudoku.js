@@ -8,22 +8,14 @@ class Sudoku {
   }
 
   solve() {
-    let data = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-   for (let y = 0; y < this.papan.length; y++) {
-     for (let x = 0; x < this.papan.length; x++) {
-       if (this.papan[y][x] == 0) {
-         // for (let d = 0; d < data.length; d++) {
-         data.forEach(function (element) {
-           // console.log(element);
-           if (this.cekRows(y, element) && this.cekCols(x, element) && this.cek3X3(y, x, element)) {
-             this.papan[y][x] = element;
+   for (let row = 0; row < this.papan.length; row++) {
+     for (let col = 0; col < this.papan.length; col++) {
+       if (this.papan[row][col] == 0) {
+         this.checker.forEach(checker=> {
+           if (this.cekRows(row, checker) && this.cekCols(col, checker) && this.cek3X3(row, col, checker)) {
+             this.papan[row][col] = checker.toString();
            }
-         }, this);
-         // console.log(this.cekRow(element, y) && this.cekCol(element, x) && this.cekTengah(element, y, x));
-         // if (this.cekRow(y, data[d]) && this.cekCol(x, data[d]) && this.cekTengah(y, x, data[d])) {
-         //   this.row[y][x] = data[d];
-         // }
-         // }
+         });
        }
      }
    }
