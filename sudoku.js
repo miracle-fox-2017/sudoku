@@ -108,6 +108,7 @@ class Sudoku {
         return arrNotEmpty;
     }
 
+    // Release 3 : Cek 3x3
     get3x3Box(arrBoard, baris, kolom) {
         let locArr = [];
         let arr3x3 = [];
