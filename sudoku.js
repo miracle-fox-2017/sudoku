@@ -16,8 +16,8 @@ class Sudoku {
 		}
 		return this.convertToNumber(arr);
 	}	
-// conver semua ke num
 
+// convert to num , for good interface
 	convertToNumber(board){
 		for (let i = 0 ; i<board.length ; i++){
 			for (let j = 0 ; j<board.length ; j++){
@@ -29,27 +29,30 @@ class Sudoku {
 		this.firstBoard(board)
 		return this.checkBoard(board);
 	}	
+
+//print first Board	
 	firstBoard(board){
 		console.log("First Board")
-		console.log("-----------")		
+		console.log("---------------------")		
 		for (let i = 0 ; i<9 ; i++){
 			let temp = '';
 			for (let j = 0 ; j <9 ; j++){
 				if (j == 2 || j == 5){
-				temp = temp + board[i][j] + "|"	
+				temp = temp + board[i][j] + " | "	
 				}
 				else{
-				temp = temp + board[i][j]
+				temp = temp + board[i][j] +" "
 				}
 			}
 			console.log(temp)
 			if (i == 2 || i == 5){
-				console.log("-----------")
+				console.log("---------------------")
 			}
 		}
-		console.log("-----------")		
+		console.log("---------------------")		
 	}
-// make Vertical Array
+
+// make Vertical Array to make easier check Vertical
 	convertVerticalArray(board, index){
 		let newArr = []
 		for (let i = 0 ; i<board.length ; i++){
@@ -81,6 +84,7 @@ class Sudoku {
 		}
 		return this.board = board;
 	}
+
 //checkHorizontal	
 	checkHorizontal(board,baris, index,num){
 		// console.log(num , baris)
@@ -98,6 +102,7 @@ class Sudoku {
 		}
 		return false;
 	}	
+
 //checkSquare	
 	checkSquare(board,baris, index,num){
 		this.checkIndexSquareLength(index)
@@ -134,12 +139,14 @@ class Sudoku {
 			return true;
 		}
 	}
+
 //check length Square
 	checkIndexSquareLength(index){
 		if (index <3) return 3
 		if (index >2 && index <6) return 6
 		if (index >5 && index <9) return 9		
 	}
+
 //check Start Square
 	checkIndexSquareStart(index){
 		if (index <3) return 0
@@ -150,25 +157,24 @@ class Sudoku {
 //Sudoku Finish solve
 	solve(){
 		console.log("Finished Board")
-		console.log("-----------")		
+		console.log("---------------------")		
 		for (let i = 0 ; i<9 ; i++){
 			let temp = '';
 			for (let j = 0 ; j <9 ; j++){
 				if (j == 2 || j == 5){
-				temp = temp + this.board[i][j] + "|"	
+				temp = temp + this.board[i][j] + " | "	
 				}
 				else{
-				temp = temp + this.board[i][j]
+				temp = temp + this.board[i][j] +" "
 				}
 			}
 			console.log(temp)
 			if (i == 2 || i == 5){
-				console.log("-----------")
+				console.log("---------------------")
 			}
 		}
-		console.log("-----------")
+		console.log("---------------------")
 	}
-
 }
 
 var game = new Sudoku('105802000090076405200400819019007306762083090000061050007600030430020501600308900')
