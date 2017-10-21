@@ -5,6 +5,7 @@ class Sudoku {
     this.number = board_string
     this.checker = [1,2,3,4,5,6,7,8,9]
     this.papan = []
+    this.sisaKosong = []
   }
 
   solve() {
@@ -22,15 +23,52 @@ class Sudoku {
    return this.papan;
   }
 
+  backtrack(){
+    //CARI YANG MASIH KOSONG
+    let sisaKosong = []
+    for (let e = 0; e < this.papan.length; e++) {
+      for (let f = 0; f < this.papan.length; f++) {
+        if (this.papan[e][f] === '0') {
+          sisaKosong.push([e,f]);
+        }
+      }
+    }
+    // PROCCESS ISI DATA YANG MASIH KOSONG
+    let maxValue = 9;
+    for (var idx = 0; idx < sisaKosong.length;) {
+      let row = sisaKosong[idx][0]
+      let col = sisaKosong[idx][1]
+      let value = +(this.papan[row][col]) + 1;
+      let finded = false;
+      debugger
+      while(!finded && value <= maxValue){
+        // CEK DATA TRUE FALSE
+         if (this.cekRows(row, value) && this.cekCols(col, value) && this.cek3X3(row, col, value)) {
+          finded = true
+          this.papan[row][col] = value.toString();
+           idx++
+        } else {
+        // TRY NEW value
+          value++
+        }
+      }
+      // PROCESS BACKTRACK
+      if(!finded){
+        this.papan[row][col] = 0
+        idx--
+      }
+    }
+    return this.papan
+  }
+
   // Returns a string representing the current state of the board
   board() {
     for (var row = 0; row < 9; row++) {
       let rows =[]
       for (var col = 0; col < 9; col++) {
-        let angka;
           rows.push(this.number[col])
       }
-      this.number= this.number.slice(9, this.number.length)
+      this.number = this.number.slice(9, this.number.length)
       this.papan.push(rows)
     }
     return this.papan
@@ -74,15 +112,20 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
   .split("\n")[0]
 let masalah ='302609005500730000000000900000940000000000109000057060008500006000000003019082040'
-var game = new Sudoku(masalah)
-
-
+var game = new Sudoku(board_string)
+var gameBacktrack = new Sudoku(board_string)
 
 // Remember: this will just fill out what it can and not "guess"
-// game.solve()
-
-console.log(game.board());
 // console.log(game.cek3X3(4,1,1))
 // console.log(game.cekRows(4,0));
 // console.log(game.cekCols(5, 0));
+gameBacktrack.board()
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~PAPAN AWAL~~~~~~~~~~~~~~~~~~~~~~~~~');
+console.log(game.board());
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+console.log('__________________________SOLVE____________________________');
 console.log(game.solve());
+console.log('-----------------------------------------------------------');
+console.log('________________________BACKTRACK__________________________');
+console.log(gameBacktrack.backtrack());
+console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
