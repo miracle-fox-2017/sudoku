@@ -21,13 +21,8 @@ class Sudoku {
         for (var i = 0; i < 9; i++) {
             for (var j = 0; j < 9; j++) {
                 if (arrBoard[i][j] == 0) {
-                    arrBoard[i][j] = this.getSudokuNumber(arrBoard, i, j);
+                    arrBoard[i][j] = this.getSudokuNumber(arrBoard, i, j)[0];
                 }
-                // console.log(arrBoard);
-                counter++;
-                // console.log(`Run ${counter} \n`);
-                // this.sleep(300);
-                // console.log(arrBoard[i][j]+' - pos: '+i+j);
             }
         }
 
@@ -48,38 +43,6 @@ class Sudoku {
         return arrLeft;
     }
 
-    getEmptyPositionSingle(arrBoard, baris = 'all', kolom = 'all') {
-        let arrIndexO = [];
-
-        for (var i = 0; i < 9; i++) {
-            if (baris !== 'all' || kolom != 'all') {
-                if (baris === i) {
-                    for (var j = 0; j < 9; j++) {
-                        if (arrBoard[i][j] == 0) {
-                            arrIndexO.push([i, j]);
-                        }
-                    }
-                }
-
-                for (var j = 0; j < 9; j++) {
-                    if (kolom === j) {
-                        if (arrBoard[i][j] == 0) {
-                            arrIndexO.push([i, j]);
-                        }
-                    }
-                }
-            } else {
-                for (var j = 0; j < 9; j++) {
-                    if (arrBoard[i][j] == 0) {
-                        arrIndexO.push([i, j]);
-                    }
-                }
-            }
-        }
-
-        return arrIndexO;
-    }
-
     getEmptyPositionAllBoard(arrBoard) {
         let arrIndexO = [];
 
@@ -93,6 +56,7 @@ class Sudoku {
 
         return arrIndexO;
     }
+
 
     getNotEmptyRowCol(arrBoard, baris, kolom) {
         let arrNotEmpty = [];
@@ -113,6 +77,35 @@ class Sudoku {
         }
 
         return Array.from(new Set(arrNotEmpty));
+    }
+
+    // Release 1 : Cek Perbaris 
+    getNotEmptyRowValue(arrBoard, baris) {
+        let arrNotEmpty = [];
+
+        for (var i = 0; i < 1; i++) {
+            for (var j = 0; j < 9; j++) {
+                if (arrBoard[baris][j] !== 0) {
+                    arrNotEmpty.push(arrBoard[baris][j])
+                }
+            }
+        }
+
+        return arrNotEmpty;
+    }
+
+    // Release 2 : Cek Perkolom 
+    getNotEmptyColValue(arrBoard, kolom) {
+        let arrNotEmpty = [];
+
+        for (var i = 0; i < 9; i++) {
+            if (arrBoard[i][kolom] !== 0){
+               arrNotEmpty.push(arrBoard[i][kolom])
+            }
+        }
+
+
+        return arrNotEmpty;
     }
 
     get3x3Box(arrBoard, baris, kolom) {
@@ -209,53 +202,28 @@ class Sudoku {
     }
 
     // [0, 1]
-    getSudokuNumber(arrboard = this.board(), baris, kolom) {
-        let arrIndexO = []; //[baris, kolom]
-        let arrIndexNum = [];
-        let arrEmpty = this.getEmptyPositionAllBoard(arrboard); // Seluruh Array yang kosong
+    getSudokuNumber(arrBoard = this.board(), baris, kolom) {
         let chosenArray = [];
+        // RELEASE 1 dan 2
+        // Gabungkan seluruh Angka di baris dan kolom yg tidak 0
+        let arrNotEmptyTarget = Array.from(new Set(this.getNotEmptyRowValue(arrBoard, baris).concat(this.getNotEmptyColValue(arrBoard, kolom)))).sort(); 
 
-        let arrNotEmptyTarget = this.getNotEmptyRowCol(arrboard, baris, kolom); // dnms Ambil seluruh nilai di baris kolom yg tidak '0' di target
-        let numberToEntersRowCol = this.getRestOfNumbers(arrNotEmptyTarget);
-        let target3x3 = this.get3x3BoxLocation(baris, kolom); // dnms
-        let getTarget3x3Square = this.get3x3Box(arrboard, target3x3[0], target3x3[1]); //fix
+        // Release 3
+        // Ambil seluruh nilai yang tidak 0 di 3x3
+        let target3x3 = this.get3x3BoxLocation(baris, kolom); // 
+        let getTarget3x3Square = this.getRestOfNumbers(Array.from(new Set(this.get3x3Box(arrBoard, target3x3[0], target3x3[1]))).filter((num) => num > 0 )); 
 
-        // console.log(arrEmpty); 
-        // console.log("Nilai not empty (0,1): "+arrNotEmptyTarget); // 
-        // console.log("Nilai bisa masuk (0,1): "+numberToEntersRowCol) // dapatkan nilai sisa yang memungkinan masuk ke target 
-
-        // Get quadran kotak berdasarkan posisi : (0, 1) ada di kota (0, 0)
-        // console.log("Lokasi 3x3 target "+target3x3);
-        // console.log("Isi 3x3 target: "+getTarget3x3Square) // get 3x3 target
-
-        chosenArray = numberToEntersRowCol.filter((val) => getTarget3x3Square.indexOf(val) == -1);
+        // Gabungkan nilai unik dari baris, kolom dan 3x3. Kemudian dari nilai gabungan itu,
+        // cari nilai 1 - 9 yang tidak termasuk dalam nilai gabungan. Array hasil tersebut adalah angka pilihan yang kemungkinan masuk kedalam yg bernilai 0.
+        chosenArray = getTarget3x3Square.filter( (num) => arrNotEmptyTarget.indexOf(num) == -1 );
 
         if (chosenArray.length > 0) {
-            return chosenArray[0];
+            return chosenArray;
         } else {
-            // console.log('POSISI'+baris+kolom);
-            // this.getEmptyPositionSingle(arrboard, baris, kolom);
-            // this.getNotEmptyRowCol(arrboard, baris, kolom);
-            let arNotemp = this.getEmptyPositionSingle(arrboard, baris, kolom);
-            let insertNumber = this.getRestOfNumbers(arNotemp);
-
-            // return this.getSudokuNumber(arrboard, baris, kolom);
-
-            // HOT FIX! Masih Bug!
-            if (kolom < 8) {
-                if (arrboard[baris][kolom + 1] + 1 > 8) {
-                    return arrboard[baris][kolom + 1] - 1;
-                } else {
-                    return arrboard[baris][kolom + 1] + 1;
-                }
-
-            } else {
-                if (arrboard[baris][kolom + 1] + 1 > 9) {
-                    return arrboard[baris][kolom - 1] - 1;
-                } else {
-                    return arrboard[baris][kolom - 1] + 1;
-                }
-            }
+            let empPos = this.getNotEmptyRowValue(arrBoard, baris);
+            let insertNumber = this.getRestOfNumbers(this.getNotEmptyRowValue(arrBoard, baris));
+     
+            return insertNumber;
         }
 
     }
@@ -291,34 +259,49 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 var game = new Sudoku(board_string)
 
 // Remember: this will just fill out what it can and not "guess"
-game.solve()
-// console.log(game.getSudokuNumber(0, 1))
+game.solve();
 
-// Jika 0, ISI
 let board = game.board();
 
-// console.log(game.getSudokuNumber(board,0,1));
-// board[0][1] = game.getSudokuNumber(board,0,1);
 
-// console.log(board)
+// // testing();s
 
-// console.log(game.getSudokuNumber(board,0,4));
-// board[0][4] = game.getSudokuNumber(board,0,4);
+// // console.log(game.getRestOfNumbers([1,2,3,4,5,6,7,8])[0]);
+// function testing() {
+//    let board = game.board();
+//    console.log(game.getSudokuNumber(board,0,1)[0]);
+//    board[0][1] = game.getSudokuNumber(board,0,1)[0];
 
-// console.log(board)
+//    console.log(board)
 
-// console.log(game.getSudokuNumber(board,0,6));
-// board[0][6] = game.getSudokuNumber(board,0,6);
+//    // console.log(game.getSudokuNumber(board,0,4));
+//    // board[0][4] = game.getSudokuNumber(board,0,4)[0];
 
-// console.log(board)
+//    // console.log(board)
 
-// console.log(game.getSudokuNumber(board,0,7));
-// board[0][7] = game.getSudokuNumber(board,0,7);
+//    // console.log(game.getSudokuNumber(board,0,6)[0]);
+//    // board[0][6] = game.getSudokuNumber(board,0,6)[0];
 
-// console.log(board)
+//    // console.log(board)
 
+//    // console.log(game.getSudokuNumber(board,0,7)[0]);
+//    // board[0][7] = game.getSudokuNumber(board,0,7)[0];
 
-// console.log(game.getSudokuNumber(board,0,8));
-// board[0][8] = game.getSudokuNumber(board,0,8);
+//    // console.log(board)
 
-// console.log(board)
+//    // console.log(game.getSudokuNumber(board,0,8)[0]);
+//    // board[0][8] = game.getSudokuNumber(board,0,8);
+
+//    // console.log(board)
+
+//    // console.log(game.getSudokuNumber(board,1,0)[0]);
+//    // board[1][0] = game.getSudokuNumber(board,1,0)[0];
+
+//    // console.log(board)
+
+//    // console.log(game.getSudokuNumber(board,1,2)[0]);
+//    // board[1][2] = game.getSudokuNumber(board,1,2);
+
+//    // console.log(board)
+// }
+
