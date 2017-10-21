@@ -21,7 +21,7 @@ class Sudoku {
        // dengan cara mencari nilai pada baris, kolom dan array.
 
        if (this.puzzle[x][y] == 0) {
-         this.angka.forEach(angka=> {
+         this.angka.map(angka=> {
            if (this.barisArr(angka, x) && this.kolomArr(angka, y) && this.groupBox(angka, x, y)) {
              // Mengembalikan nilai puzzle posisi ke [x][y] dengan nilai dari angka yang telah di cek
              this.puzzle[x][y] = angka
