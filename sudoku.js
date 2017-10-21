@@ -6,7 +6,25 @@ class Sudoku {
     this.layout   = []
   }
 
-  solve() {}
+  solve() {
+
+    const changeZero = [1,2,3,4,5,6,7,8,9]
+
+    for(let r=0; r<this.layout.length; r++){
+      for(let c=0; c<this.layout.length; c++){
+        if(this.layout[r][c] == 0){
+          // console.log('====== masuk if');
+          for(let i=0; i<changeZero.length; i++){
+            let zero = changeZero[i]
+            if(this.cekRow(r, zero) && this.cekCol(c, zero) && this.cek3x3(r, c, zero)) {
+              this.layout[r][c] = zero.toString()
+            }
+          }
+        }
+      }
+    }
+    return this.layout
+  }
 
   // Returns a string representing the current state of the board
   square(){
@@ -39,6 +57,7 @@ class Sudoku {
   }
 
   cekRow(row, target){
+    // return this.layout[row]
     if (this.layout[row].indexOf(target.toString()) === -1 ){
       return true
     }
@@ -50,7 +69,7 @@ class Sudoku {
     for(let i=0; i<this.layout.length; i++){
       arrColom.push(this.layout[i][col])
     }
-    // console.log(arrColom);
+    // console.log('==== col' + arrColom);
     if (arrColom.indexOf(target.toString()) === -1 ){
       return true
     }
@@ -58,7 +77,7 @@ class Sudoku {
 
   }
 
-  cek3x3(col, row, target){
+  cek3x3(row, col, target){
 
    let value = []
    let lengthCol = 0
@@ -88,13 +107,13 @@ class Sudoku {
    }
 
    // console.log(resultCol)
-   for(let j=0; j<lengthCol; j++){
-    for(let i=0; i<lengthRow; i++){
-     value.push(this.layout[j+idxPlusCol][i+idxPlusRow])
+   for(let j=0; j<lengthRow; j++){
+    for(let i=0; i<lengthCol; i++){
+     value.push(this.layout[j+idxPlusRow][i+idxPlusCol])
     }
    }
 
-   // console.log(this.layout[1][8]);
+  //  console.log('===== 3x3 ' + value);
    if (value.indexOf(target.toString()) === -1 ){
      return true
    }
@@ -111,14 +130,23 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
   .toString()
   .split("\n")[0]
 
-var game = new Sudoku(board_string)
+var game = new Sudoku('105802000090076405200400819019007306762083090000061050007600030430020501600308900')
 
 // Remember: this will just fill out what it can and not "guess"
-// game.solve()
+
+
+
 game.square()
 game.board()
-// game.cekCol()
+// game.cekRow(1, 4)
+// game.cekCol(0,5)
+// game.cek3x3(0,8,4)
+game.solve()
+
+
 // console.log(game.square())
 console.log(game.board())
-console.log(game.cek3x3(0,8,4))
-// console.log(game.cekCol(0,1))
+// console.log(game.cek3x3(8,7,7))
+// console.log(game.solve())
+// console.log(game.cekCol(8,7))
+// console.log(game.cekRow(0,7))
