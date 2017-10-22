@@ -29,7 +29,6 @@ class Sudoku {
     return this.mainBoard
   }
 
-  // Returns a string representing the current state of the board
   board() {
     let strCount = 0
     for (var i = 0; i < 9; i++) {
@@ -96,8 +95,7 @@ class Sudoku {
   }
 }
 
-// The file has newlines at the end of each line,
-// so we call split to remove it (\n)
+
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 // var board_string = fs.readFileSync('set-02_project-euler_50-easy-puzzles.txt')
@@ -106,9 +104,8 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 
 // for (var i = 0; i < board_string.length; i++) { // tes dengan looping sebanyak isi sample file
 //   console.log("\x1B[2J")
-  var game = new Sudoku(board_string[0])
+var game = new Sudoku(board_string[0])
 
-// Remember: this will just fill out what it can and not "guess"
 console.log('Sudoku Board ');
 console.log(game.board());
 console.log('=================================');
