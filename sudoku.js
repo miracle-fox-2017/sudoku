@@ -3,7 +3,7 @@
 class Sudoku {
   constructor(board_string) {
     this.string = board_string
-    this.boardSave = []
+    this.mainBoard = []
   }
 
   solve() {
@@ -11,18 +11,22 @@ class Sudoku {
     for (var i = 0; i < empty.length; i++) {
       debugger
       let status = false
-      let row = empty[i][0]
       let col = empty[i][1]
-      let value = 0
-      while(!status && value < 9){
-        value++
+      let row = empty[i][0]
+      let value = this.mainBoard[row][col]+1
+      while(!status && value <= 9){
         if(this.checkRow(row, value)&&this.checkCol(col, value)&&this.checkSquare(col, row, value)){
-          this.boardSave[row][col] = value.toString()
+          this.mainBoard[row][col] = value
           status = true
         }
+        value++
+      }
+      if(!status){ // jika status masih false mundur ke index 0 sebelumnya
+        this.mainBoard[row][col] = 0
+        i = i-2
       }
     }
-    return this.boardSave
+    return this.mainBoard
   }
 
   // Returns a string representing the current state of the board
@@ -31,17 +35,17 @@ class Sudoku {
     for (var i = 0; i < 9; i++) {
       let tmp = []
       for (var j = 0; j < 9; j++) {
-        tmp.push(this.string[strCount])
+        tmp.push(parseInt(this.string[strCount]))
         strCount++
       }
-      this.boardSave.push(tmp)
+      this.mainBoard.push(tmp)
     }
-    return this.boardSave
+    return this.mainBoard
   }
 
   checkRow(row, value){
     for (var i = 0; i < 9; i++) {
-      if(this.boardSave[row][i] == value){
+      if(this.mainBoard[row][i] === value){
         return false
       }
     }
@@ -50,7 +54,7 @@ class Sudoku {
 
   checkCol(col, value){
     for (var i = 0; i < 9; i++) {
-      if(this.boardSave[i][col] == value){
+      if(this.mainBoard[i][col] === value){
         return false
       }
     }
@@ -62,7 +66,7 @@ class Sudoku {
     row = Math.floor(row/3)*3
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
-        if(this.boardSave[row+i][col+j] == value){
+        if(this.mainBoard[row+i][col+j] === value){
           return false
         }
       }
@@ -70,16 +74,25 @@ class Sudoku {
     return true
   }
 
-  checkEmpty(){
+  checkEmpty(){ // cek posisi index 0
     let temp = []
     for (var i = 0; i < 9; i++) {
       for (var j = 0; j < 9; j++) {
-        if(this.boardSave[i][j] == 0){
+        if(this.mainBoard[i][j] === 0){
           temp.push([i, j])
         }
       }
     }
     return temp
+  }
+
+  sleep(milliseconds) {
+    var start = new Date().getTime();
+    for (var i = 0; i < 1e7; i++) {
+      if ((new Date().getTime() - start) > milliseconds) {
+        break;
+      }
+    }
   }
 }
 
@@ -87,15 +100,19 @@ class Sudoku {
 // so we call split to remove it (\n)
 var fs = require('fs')
 var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
+// var board_string = fs.readFileSync('set-02_project-euler_50-easy-puzzles.txt')
   .toString()
-  .split("\n")[0]
+  .split('\n')
 
-var game = new Sudoku(board_string)
+// for (var i = 0; i < board_string.length; i++) { // tes dengan looping sebanyak isi sample file
+//   console.log("\x1B[2J")
+  var game = new Sudoku(board_string[0])
 
 // Remember: this will just fill out what it can and not "guess"
+console.log('Sudoku Board ');
 console.log(game.board());
-console.log('================================================');
+console.log('=================================');
+console.log('Sudoku Solve ');
 console.log(game.solve());
-
-// game.solve()
-// console.log(game.checkSquare(1, 2, 8))
+// game.sleep(500)
+// }
