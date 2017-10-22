@@ -64,7 +64,7 @@ class Sudoku {
         return this.boardBox;
     }
     solve(){}
-    // Returns a string representing the current state of the board
+    // Returns a string representing the current state of the board / Print result board
     board(){}
 }
 
