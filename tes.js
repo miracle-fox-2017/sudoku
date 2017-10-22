@@ -7,52 +7,26 @@ class Sudoku {
   }
 
   solve(){
-  	var temp = 0
-    for(var i = 0; i < 9; i++) {
-      var arrTemp = []
-      for(var j = 0; j < 9; j++) {
-        arrTemp.push(+this.boardList[temp++])
-      }
-      this.papan.push(arrTemp)
-    }
-
-    var kordinat_kosong = []
-
-    for(var i = 0; i < 9; i++) {
-      for(var j = 0; j < 9; j++) {
-        if(this.papan[i][j] == 0) {
-          kordinat_kosong.push([i, j])
-        }
-      }
-    }
-
-
-    var i = 0
-
-    while(i < kordinat_kosong.length) {
-
-      // var baris = kordinat_kosong[i][0]
-      var kolom = kordinat_kosong[i][1]
-      var nilai = this.papan[baris][kolom] + 1
-      var status = false
-      console.log(kolom)
-
-      while(nilai <= 9) {
-        if(this.cekBaris(nilai, baris) && this.cekKolom(nilai, kolom) && this.cek3x3(nilai, baris, kolom)) {
-          i++
-          this.papan[baris][kolom] = nilai
+  	let empty = this.checkKosong()
+    for (var i = 0; i < empty.length; i++) {
+      debugger
+      let status = false
+      let col = empty[i][1]
+      let row = empty[i][0]
+      let value = this.mainBoard[row][col]+1
+      while(!status && value <= 9){
+        if(this.checkBaris(row, value)&&this.checkKolom(col, value)&&this.checkSquare(col, row, value)){
+          this.mainBoard[row][col] = value
           status = true
-          break
         }
-        else {
-          nilai++
-        }
+        value++
       }
-      if(!status) {
-        this.papan[baris][kolom] = 0
-        i--
+      if(!status){ // rjika status masih false mundur ke index 0 sebelumnya
+        this.mainBoard[row][col] = 0
+        i = i-2
       }
     }
+    return this.mainBoard
 
   }
 
@@ -123,16 +97,35 @@ class Sudoku {
 
   }
 
+  checkKosong(){ 
+    let temp = []
+    for (var i = 0; i < 9; i++) {
+      for (var j = 0; j < 9; j++) {
+        if(this.papan[i][j] === 0){
+          temp.push([i, j])
+        }
+      }
+    }
+    return temp
+  }
+
 
 }
 
 
 let sudoku = new Sudoku('105802000090076405200400819019007306762083090000061050007600030430020501600308900')
 
-// sudoku.board()
+var fs = require('fs')
+var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
+// var board_string = fs.readFileSync('set-02_project-euler_50-easy-puzzles.txt')
+  .toString()
+  .split('\n')
 
-// console.log(sudoku.cekBaris(5, 0))
-// console.log(sudoku.cekKolom(7, 2))
-// console.log(sudoku.cek3x3(7,1,2))
-sudoku.solve()
-console.log(sudoku.board());
+// for (var i = 0; i < board_string.length; i++) { // tes dengan looping sebanyak isi sample file
+//   console.log("\x1B[2J")
+var game = new Sudoku(board_string[0])
+console.log('Sudoku Board ');
+console.log(game.board());
+console.log('=================================');
+console.log('Sudoku Solve ');
+console.log(game.solve());
