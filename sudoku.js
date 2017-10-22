@@ -19,6 +19,7 @@ class Sudoku {
         let counter = 0;
 
         for (var i = 0; i < 9; i++) {
+         
             for (var j = 0; j < 9; j++) {
                 if (arrBoard[i][j] == 0) {
                     arrBoard[i][j] = this.getSudokuNumber(arrBoard, i, j)[0];
@@ -26,7 +27,7 @@ class Sudoku {
             }
         }
 
-        console.log(arrBoard);
+        return arrBoard;
     }
 
     getRestOfNumbers(arrNum) {
@@ -80,6 +81,12 @@ class Sudoku {
     }
 
     // Release 1 : Cek Perbaris 
+    getValueForEmptyRow(arrBoard, baris) {
+       let noEmpty = this.getNotEmptyRowValue(arrBoard, baris);
+
+       return this.getRestOfNumbers(noEmpty);
+    }
+
     getNotEmptyRowValue(arrBoard, baris) {
         let arrNotEmpty = [];
 
@@ -95,6 +102,12 @@ class Sudoku {
     }
 
     // Release 2 : Cek Perkolom 
+    getValueForEmptyCol(arrBoard, kolom) {
+       let noEmpty = this.getNotEmptyColValue(arrBoard, kolom);
+       
+       return this.getRestOfNumbers(noEmpty);
+    }
+
     getNotEmptyColValue(arrBoard, kolom) {
         let arrNotEmpty = [];
 
@@ -109,6 +122,12 @@ class Sudoku {
     }
 
     // Release 3 : Cek 3x3
+    getValueForEmpty3x3(arrBoard, baris, kolom) {
+        let posBox = this.get3x3BoxLocation(0,1);
+ 
+        return this.getRestOfNumbers(this.get3x3Box(arrBoard, posBox[0], posBox[1]));
+    }
+
     get3x3Box(arrBoard, baris, kolom) {
         let locArr = [];
         let arr3x3 = [];
@@ -260,10 +279,12 @@ var board_string = fs.readFileSync('set-01_sample.unsolved.txt')
 var game = new Sudoku(board_string)
 
 // Remember: this will just fill out what it can and not "guess"
-game.solve();
+console.log(game.solve());
 
-let board = game.board();
-
+// let board = game.board();
+// // console.log(game.getValueForEmptyRow(board, 0));
+// console.log(game.getValueForEmpty3x3(board, 0, 1));
+// console.log(board);
 
 // // testing();s
 
