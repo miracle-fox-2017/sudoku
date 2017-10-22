@@ -7,20 +7,17 @@ class Sudoku {
     this.arrZero=[];
     this.makeResult=[];
   }
-
-
-  // Returns a string representing the current state of the board
   board() {
-    let setPanjang = this.board_string.length / 9;
     let counter = 0;
-    for (let i = 0; i < setPanjang; i++) {
+    for (let i = 0; i < 9; i++) {
       this.irisan.push([]);
-      for (let j = 0; j < setPanjang; j++) {
+      for (let j = 0; j < 9; j++) {
         this.irisan[i].push(this.board_string[counter]);
         counter++;
       }
     }
-    return this.irisan;
+    // console.log(this.irisan);
+    return this;
   }
 
 
@@ -36,14 +33,15 @@ class Sudoku {
         }
       }
     }
-    console.log(this.arrZero)
-    return this.arrZero;
+    // console.log(this.arrZero)
+    return this;
   }
+
     //method rowCheck untuk mengecek nilai per BARIS
   rowCheck(baris, check) {
     let getRow = baris[1];
     for (let i = 0; i < 9; i++) {
-      if (this.irisan[i][getRow] == check) {
+      if (this.irisan[i][getRow] === check) {
         return true;
       }
     }
@@ -53,7 +51,7 @@ class Sudoku {
   colCheck(kolom,check){
     let getCol = kolom[0];
     for(let i = 0; i < 9;i++){
-      if (this.irisan[getCol][i]==check){
+      if (this.irisan[getCol][i]===check){
         return true;
       }
     }
@@ -75,13 +73,14 @@ class Sudoku {
 //method untuk mengganti nilai 0 dengan result dengan memanggil 3 method checker
  solve() {
   this.findZero();
+  // console.log(arrZero)
   for (let i = 0; i < this.arrZero.length; i++) {
     let check = 1;
     let set = true;
-    for (let j = 1; j <= 9; j++) {
-      if (this.colCheck(this.arrZero[i], check) === false) {
-      if (this.rowCheck(this.arrZero[i], check) === false) {
-      if (this.checkArea(this.arrZero[i], check) === false) {
+    for (let j = 0; j <9; j++) {
+      if (this.colCheck(this.arrZero[i], check) == false) {
+      if (this.rowCheck(this.arrZero[i], check) == false) {
+      if (this.checkArea(this.arrZero[i], check) == false) {
             this.irisan[this.arrZero[i][0]][this.arrZero[i][1]] = String(check);
             set = false;
             }
@@ -96,9 +95,11 @@ class Sudoku {
   resultBoard() {
     this.solve();
     let rowBoard = this.irisan.length;
-    let colBoard = this.irisan[0].length / 3;
+    let colBoard = this.irisan[0].length/3;
+
     for (let i = 0; i < rowBoard; i++){
       this.makeResult.push([]);
+      // console.log(this.makeResult)
       for (let j = 0; j < colBoard; j++){
         this.makeResult[i].push([]);
         for (let k = j*3; k < 3*(j+1);k++){
@@ -124,4 +125,7 @@ var game = new Sudoku(board_string)
 // Remember: this will just fill out what it can and not "guess"
 // game.solve()
 
+// console.log(game.board())
+// console.log(game.findZero())
 console.log(game.resultBoard())
+// console.log(game.solve())
