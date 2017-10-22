@@ -37,7 +37,7 @@
     return Math.floor(Math.random()*9+1)
   }
 
-  //fungsi untuk cek ke samping
+
     angkaBawah(){
       //kumpulkan nilai bawah
       let nilaibawah = []
@@ -58,10 +58,10 @@
       let a = this.randomNum().toString()
 
 
-      //console.log(nilaibawah)
-      //console.log(this.board[+this.zeroPos[0][0]])
+      //cek angka a apa ada yang sama dengan sampingnya
       if(this.board[+this.zeroPos[0][0]].indexOf(a)===-1 ){
         debugger
+        //jika tidak cek kebawah..
         let b = this.angkaBawah()
         if(b.indexOf(a) === -1){
           this.board[+this.zeroPos[0][0]][+this.zeroPos[0][1]]=a
